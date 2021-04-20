@@ -1,1 +1,131 @@
-# web-nanda
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Automatic Lamp</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript">
+		$(document).ready(function(){
+			var state=false;
+			setInterval(function(){
+				$.ajax({
+					url: 'https://lychee-crumble-45794.herokuapp.com/https://platform.antares.id:8443/~/antares-cse/antares-id/AutomaticLamp/AutomaticLamp/la',
+					method: 'GET',
+					headers: {
+						'X-M2M-Origin':'7dc57000dea4a3d5:83e96f357b69d921',
+						'Content-Type':'application/json;ty=4',
+						'Accept':'application/json'
+					},
+					dataType: 'json',
+					success:function(response){
+						data = JSON.parse(response["m2m:cin"].con);
+						console.log(data);
+						$("#data-ldr").text(data.ldr); //sesuaikan variabel dengan antares
+						$("#data-pir").text(data.pir); //sesuaikan variabel dengan antares
+						$("#data-status").text(data.led); //sesuaikan variabel dengan antares
+						if(state==false){
+							state=true;
+							document.body.classList.toggle('disconnected');
+						}
+					},
+					error:function(data){
+						$("#data-ldr").text("Loading..."); //sesuaikan variabel dengan antares
+						$("#data-pir").text("Loading..."); //sesuaikan variabel dengan antares
+						$("#data-status").text("Loading..."); //sesuaikan variabel dengan antares
+						if(state==true){
+							state=false;
+							document.body.classList.toggle('disconnected');
+						}
+					}
+				});
+			},1000)
+		});
+  </script>
+  <style>
+	* {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
+
+	body{
+		background: linear-gradient(to right top, #1FA2FF,#12D8FA,#A5FECB);
+	}
+
+	body.disconnected{
+		background: linear-gradient(to right top, #ef1080, #ee0979, #ff6a00);
+	}
+
+	main {
+		min-height: 100vh;
+		display: flex;
+		align-items: center;
+		justify-content:center;
+	}
+
+	h1{
+		color:white;
+		font-family: 'Averia Serif Libre', cursive;
+		text-align: center;
+	}
+
+	.content {
+		background: white;
+		background: linear-gradient(to right top, rgba(255,255,255,0.7), rgba(255,255,255,0.3));
+		font-family: 'Averia Serif Libre', cursive;
+		width: 70%;
+		border-radius: 2rem;
+		display: flex;
+	}
+
+	.center{
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		margin-top: 2.5%;
+		margin-bottom: 2.5%;
+		justify-content: center;
+	}
+
+	.right{
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		margin-top: 2.5%;
+		margin-bottom: 2.5%;
+		text-align: center;
+		justify-content: center;
+	}
+
+	.left{
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		margin-top: 2.5%;
+		margin-bottom: 2.5%;
+		text-align: center;
+		justify-content: center;
+	}
+  </style>
+</head>
+
+<body class="connected || disconnected">
+	<main>
+		<div class="content">
+			<div class="left">
+				<h1><span id="data-ldr">Loading...</span></h1>
+				<h1></br>LDR</h1>
+			</div>
+			<div class="center">
+				<h1><span id="data-pir">Loading...</span></h1>
+				<h1></br>PIR</h1>
+			</div>
+			<div class="right">
+				<h1><span id="data-status">Loading...</span></h1>
+				<h1></br>Status</h1>
+			</div>
+		</div>
+	<main>
+</body>
+
+</html>
